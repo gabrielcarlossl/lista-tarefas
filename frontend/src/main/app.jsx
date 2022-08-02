@@ -2,6 +2,7 @@ import React from 'react'
 import Menu from '../template/Menu'
 import Routes from './Routes'
 
+
 require('bootstrap/dist/css/bootstrap.min.css')
 require('font-awesome/css/font-awesome.min.css')
 
