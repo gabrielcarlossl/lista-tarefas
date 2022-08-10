@@ -12,17 +12,22 @@ export default class Todo extends Component {
         super(props)
         this.state = { description: '', list: [] }
 
-        this.handleChange = this.handleChange.bind(this)
         this.handleAdd = this.handleAdd.bind(this)
+        this.handleChange = this.handleChange.bind(this)
         this.handleRemove = this.handleRemove.bind(this) // para que ele tenha a referencia certa deve ser adicionado dentro do construtor
-        
+        this.handleMarkAsDone = this.handleMarkAsDone.bind(this)
+        this.handleMarkAsPending = this.handleMarkAsPending.bind(this)
+        this.handleSearch = this.handleSearch.bind(this)
+        this.handleClear = this.handleClear.bind(this)
+
         this.refresh() //chama a função no construtor para iniciar ela já carregada
         
     }
 
-    refresh(){
-        axios.get(`${URL}?sort=-createdAt`)//filtro para ordenar em ordem crescente
-                .then(resp=>this.setState({...this.setState, description:'', list: resp.data})) // tras a lista atualizada e zera descrição
+    refresh(description = ''){
+        const search = description ? `&description__regex=/${description}/` : ''
+        axios.get(`${URL}?sort=-createdAt${search}`)//filtro para ordenar em ordem crescente 
+                .then(resp=>this.setState({...this.setState, description, list: resp.data})) // tras a lista atualizada e zera descrição
     }
 
     handleChange(e) {
@@ -37,7 +42,26 @@ export default class Todo extends Component {
     
     handleRemove(todo){
         axios.delete(`${URL}/${todo._id}`)
-                .then(resp => this.refresh()) // passa o url e o id, deve ser passado o id para localizar, quando vier o resultado, chama o refresh para atualizar na tela e a lista sair de la
+                .then(resp => this.refresh(this.state.description)) // passa o url e o id, deve ser passado o id para localizar, quando vier o resultado, chama o refresh para atualizar na tela e a lista sair de la
+    }
+
+    //utilizando o metodo http put, vai mudar o 'done' boolean para true 
+    handleMarkAsDone(todo){
+        axios.put(`${URL}/${todo._id}`, {...todo, done: true})
+                .then(resp => this.refresh(this.state.description))
+    }
+
+    handleMarkAsPending(todo){
+        axios.put(`${URL}/${todo._id}`,{...todo, done: false})
+                .then(resp => this.refresh(this.state.description))
+    }
+
+    handleSearch(){
+        this.refresh(this.state.description)
+    }
+
+    handleClear(){
+        this.refresh()
     }
 
     //o handleremove deve ser adicionado dentro do TODOLIST para ele ser chamado
@@ -45,8 +69,20 @@ export default class Todo extends Component {
         return(
             <div>
                 <PageHeader name="Tarefas" small="Cadastro"/>
-                <TodoForm description={this.state.description} handleChange={this.handleChange} handleAdd={this.handleAdd}/>
-                <TodoList list={this.state.list} handleRemove={this.handleRemove}/> 
+                <TodoForm 
+                    description={this.state.description} 
+                    handleChange={this.handleChange} 
+                    handleAdd={this.handleAdd}
+                    handleSearch={this.handleSearch}
+                    handleClear={this.handleClear}
+                />
+                <TodoList 
+                    list={this.state.list} 
+                    handleRemove={this.handleRemove} 
+                    handleMarkAsDone={this.handleMarkAsDone} 
+                    handleMarkAsPending={this.handleMarkAsPending} 
+                
+                /> 
             </div>
         )
     }
