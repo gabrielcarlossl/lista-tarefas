@@ -12,12 +12,12 @@ export const changeDescription = (event) => ({
 // nova action que vai buscar o serviço no backend
 export const search = () => {
   return (dispatch, getState) => {
-    const description = getState().todo.description
-    const search = description ? `&description__regex=/${description}/` : ''
-    const request = axios.get(`${URL}?sort=-createdAt${search}`)
-      .then(resp => dispatch({type: 'TODO_SEARCHED', payload: resp.data}))
+      const description = getState().todo.description
+      const search = description ? `&description__regex=/${description}/` : ''
+      const request = axios.get(`${URL}?sort=-createdAt${search}`)
+          .then(resp => dispatch({type: 'TODO_SEARCHED', payload: resp.data}))
   }
-};
+}
 
 //metodo de adicioanr vai receber a descrição, como paramentro, e o metodo vai fazer a requisição de post pegando a url,
 // e depois passa o objeto que tem a descrição da tarefa, sendo isso uma action creator, vai retornar um objeto com o type e o payload, com o request
