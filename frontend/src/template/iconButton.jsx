@@ -1,5 +1,5 @@
 import React from 'react'
-import If from '../template/if'
+import If from './if'
 
 
 const IconButton = props => (

@@ -5,7 +5,7 @@ const Menu = props => (
         <div className="container">
             <div className="navbar-header">
                 <a className="navbar-brand" href="#/todos">
-                    <i className="fa fa-calendar-check-o"></i> TodoApp
+                    <i className="fa fa-calendar-check-o"></i> Lista de Tarefas
                 </a>
             </div>
 
